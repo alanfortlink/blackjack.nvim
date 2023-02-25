@@ -2,7 +2,20 @@
 
 Blackjack.nvim is a neovim plugin that implements a classic BlackJack game in neovim.
 
-https://user-images.githubusercontent.com/3660978/221375547-a74f4f9f-b593-4e52-8b30-954757e30271.mov
+Using the "mini" style of cards:
+
+
+https://user-images.githubusercontent.com/3660978/221380892-8107e62d-b3d1-49a5-b4c7-9e09e6c632f6.mov
+
+
+
+
+Using the "large" style of cards:
+
+
+https://user-images.githubusercontent.com/3660978/221380900-b0a4a80e-a4c0-4f2b-a642-c6a6fb8c1456.mov
+
+
 
 ---
 
