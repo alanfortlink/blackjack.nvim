@@ -61,8 +61,12 @@ M.player_picks_card = function()
 end
 
 M.dealer_picks_card = function()
-  local card = pick_card(true)
-  M.dealer_cards[#M.dealer_cards + 1] = card
+  if not M.dealer_cards[2].revealed then
+    M.dealer_cards[2].revealed = true
+  else
+    local card = pick_card(true)
+    M.dealer_cards[#M.dealer_cards + 1] = card
+  end
 
   if M.get_dealer_total() >= 17 then
     M.match_state = M.GAME_OVER

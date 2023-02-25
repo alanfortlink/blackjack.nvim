@@ -29,11 +29,6 @@ local dealer_next_card = function()
     return
   end
 
-  if not match.dealer_cards[2].revealed then
-    match.dealer_cards[2].revealed = true
-    return
-  end
-
   match.dealer_picks_card()
 end
 
