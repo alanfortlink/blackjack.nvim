@@ -1,4 +1,3 @@
-local utils = require("blackjack.utils")
 local match = require("blackjack.match")
 local window = require("blackjack.window")
 
@@ -60,6 +59,12 @@ local option2 = function()
   window.render()
 end
 
+local reset_scores = function()
+  match.reset_scores()
+  window.update_title()
+  window.render()
+end
+
 M.create_commands = function()
   -- Black Jack
   vim.api.nvim_create_user_command("BlackJackNewGame", new_game, {})
@@ -76,6 +81,8 @@ M.create_commands = function()
   -- Options
   vim.api.nvim_create_user_command("BlackJackOption1", option1, {})
   vim.api.nvim_create_user_command("BlackJackOption2", option2, {})
+
+  vim.api.nvim_create_user_command("BlackJackResetScores", reset_scores, {})
 end
 
 return M

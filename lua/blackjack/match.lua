@@ -1,4 +1,14 @@
+local path = require("plenary.path")
+local data_path = vim.fn.stdpath("data")
+local scores_path = string.format("%s/scores.json", data_path);
+
 local M = {}
+
+-- To keep track of who's winning
+M.scores = {
+  player_score = 0,
+  dealer_score = 0,
+}
 
 M.deck = {} -- Cards in the deck
 M.dealer_cards = {} -- Cards with the dealer
@@ -42,6 +52,46 @@ local deal_initial_hands = function()
   M.player_cards[#M.player_cards + 1] = pick_card(true)
 end
 
+local save_scores = function()
+  path:new(scores_path):write(vim.fn.json_encode(M.scores), "w")
+end
+
+local read_scores_ = function()
+  return vim.json.decode(path:new(scores_path):read())
+end
+
+local read_scores = function()
+  local ok, scores = pcall(read_scores_)
+
+  if not ok then
+    scores = M.scores
+  end
+
+  M.scores = scores
+end
+
+local update_scores = function()
+  if M.match_state ~= M.GAME_OVER then
+    return
+  end
+
+  local player_total = M.get_player_total()
+  local dealer_total = M.get_dealer_total()
+
+  -- Set status
+  if player_total > 21 then
+    M.scores.dealer_score = M.scores.dealer_score + 1
+  elseif dealer_total > 21 then
+    M.scores.player_score = M.scores.player_score + 1
+  elseif player_total > dealer_total then
+    M.scores.player_score = M.scores.player_score + 1
+  elseif player_total < dealer_total then
+    M.scores.dealer_score = M.scores.dealer_score + 1
+  end
+
+  save_scores()
+end
+
 local shuffle_deck = function()
   for i = 1, 52 do
     local temp = M.deck[i]
@@ -51,6 +101,13 @@ local shuffle_deck = function()
   end
 end
 
+M.reset_scores = function()
+  M.scores.dealer_score = 0
+  M.scores.player_score = 0
+
+  save_scores()
+end
+
 M.player_picks_card = function()
   local card = pick_card(true)
   M.player_cards[#M.player_cards + 1] = card
@@ -58,6 +115,8 @@ M.player_picks_card = function()
   if M.get_player_total() > 21 then
     M.match_state = M.GAME_OVER
   end
+
+  update_scores()
 end
 
 M.dealer_picks_card = function()
@@ -71,9 +130,13 @@ M.dealer_picks_card = function()
   if M.get_dealer_total() >= 17 then
     M.match_state = M.GAME_OVER
   end
+
+  update_scores()
 end
 
 M.start_new_match = function()
+  read_scores()
+
   M.match_state = M.PLAYER_PICKING_CARD
 
   M.deck = {}

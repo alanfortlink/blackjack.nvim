@@ -1,4 +1,6 @@
 local popup = require("plenary.popup")
+
+
 local utils = require("blackjack.utils")
 local match = require("blackjack.match")
 
@@ -38,7 +40,7 @@ M.open_game = function()
 
   if bjack_win_id == nil then
     bjack_win_id, _ = popup.create(bjack_buf_id, {
-      title = "Black Jack (q)",
+      title = "Black Jack (W: " .. match.scores.player_score .. " - L: " .. match.scores.dealer_score .. ")",
       highlight = "BlackJackWindow",
       line = math.floor((vim.o.lines - HEIGHT) / 2),
       col = math.floor((vim.o.columns - WIDTH) / 2),
@@ -53,6 +55,11 @@ M.open_game = function()
   vim.api.nvim_buf_set_keymap(bjack_buf_id, "n", "q", ":BlackJackQuit<CR>", { silent = true })
 
   M.render()
+end
+
+M.update_title = function ()
+  M.destroy()
+  M.open_game()
 end
 
 M.destroy = function()
