@@ -59,7 +59,7 @@ M.open_game = function()
 
   if bjack_win_id == nil then
     bjack_win_id, _ = popup.create(bjack_buf_id, {
-      title = "Black Jack (W: " .. match.scores.player_score .. " - L: " .. match.scores.dealer_score .. ")",
+      title = "Black Jack (W: " .. match.scores.player_score .. " - L: " .. match.scores.dealer_score .. ")   <q> to quit",
       highlight = "BlackJackWindow",
       line = math.floor((vim.o.lines - get_height()) / 2),
       col = math.floor((vim.o.columns - get_width()) / 2),
