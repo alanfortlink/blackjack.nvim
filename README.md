@@ -19,7 +19,7 @@ use {
   'alanfortlink/blackjack.nvim',
   requires = {'nvim-lua/plenary.nvim'},
   config = function()
-    require("blackjack").setup({})
+    require("blackjack").setup({}) -- Required to create commands
   end
 }
 ```
