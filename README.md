@@ -21,6 +21,12 @@ use {
 }
 ```
 
+### Using [vim-plug](https://github.com/junegunn/vim-plug)
+```lua
+Plug 'nvim-lua/plenary.nvim'
+Plug 'alanfortlink/blackjack.nvim'
+```
+
 ## Usage
 
 To start a new game:
