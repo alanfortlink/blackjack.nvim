@@ -18,9 +18,6 @@ https://user-images.githubusercontent.com/3660978/221375547-a74f4f9f-b593-4e52-8
 use {
   'alanfortlink/blackjack.nvim',
   requires = {'nvim-lua/plenary.nvim'},
-  config = function()
-    require("blackjack").setup({}) -- Required to create commands
-  end
 }
 ```
 
@@ -33,7 +30,12 @@ To start a new game:
 
 To quit the game you can press `q` or:
 ```vim
-BlackJackQuit
+:BlackJackQuit
+```
+
+To reset the scores:
+```vim
+:BlackJackResetScores
 ```
 
 Press `j` and `k` to play the game and `q` to quit.

@@ -58,6 +58,10 @@ M.open_game = function()
 end
 
 M.update_title = function ()
+  if bjack_buf_id == nil then
+    return
+  end
+
   M.destroy()
   M.open_game()
 end
