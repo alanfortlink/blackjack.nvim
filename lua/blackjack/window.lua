@@ -9,14 +9,14 @@ local bjack_win_id = nil -- Current win id
 
 -- Not really used but nice to have what I've settled for
 local DEALER_HEADER_HEIGHT = 1
-local DEALER_CARDS_HEIGHT = 5
+local DEALER_CARDS_HEIGHT = 7
 local PLAYER_HEADER_HEIGHT = 1
-local PLAYER_CARDS_HEIGHT = 5
+local PLAYER_CARDS_HEIGHT = 7
 local ACTIONS_HEIGHT = 2
-local CARD_WIDTH = 3
-local MAX_CARDS = 12
+local CARD_WIDTH = 5
+local MAX_CARDS = 10
 
-local WIDTH = 2 * CARD_WIDTH * MAX_CARDS
+local WIDTH = (CARD_WIDTH * (MAX_CARDS + 1))
 local HEIGHT = DEALER_HEADER_HEIGHT
     + DEALER_CARDS_HEIGHT
     + PLAYER_HEADER_HEIGHT
@@ -85,16 +85,16 @@ local render_cards = function(lines, cards, is_turn, turn_message)
     if symbol == '10' then extra = "" end
 
     lines[start_line] = lines[start_line] .. B[5] .. string.rep(B[1], CARD_WIDTH) .. B[6] .. " "
-    lines[start_line + 1] = lines[start_line + 1] .. B[2] .. " " .. extra .. symbol .. B[4] .. " "
-    -- lines[start_line + 2] = lines[start_line + 2] .. B[2] .. "       " .. B[4] .. " "
-    lines[start_line + 2] = lines[start_line + 2] .. B[2] .. " " .. utils.get_suit(card) .. " " .. B[4] .. " "
-    -- lines[start_line + 4] = lines[start_line + 4] .. B[2] .. "       " .. B[4] .. " "
-    lines[start_line + 3] = lines[start_line + 3] .. B[2] .. symbol .. extra .. " " .. B[4] .. " "
-    lines[start_line + 4] = lines[start_line + 4] .. B[8] .. string.rep(B[1], CARD_WIDTH) .. B[7] .. " "
+    lines[start_line + 1] = lines[start_line + 1] .. B[2] .. "   " .. extra .. symbol .. B[4] .. " "
+    lines[start_line + 2] = lines[start_line + 2] .. B[2] .. "     " .. B[4] .. " "
+    lines[start_line + 3] = lines[start_line + 3] .. B[2] .. "  " .. utils.get_suit(card) .. "  " .. B[4] .. " "
+    lines[start_line + 4] = lines[start_line + 4] .. B[2] .. "     " .. B[4] .. " "
+    lines[start_line + 5] = lines[start_line + 5] .. B[2] .. symbol .. extra .. "   " .. B[4] .. " "
+    lines[start_line + 6] = lines[start_line + 6] .. B[8] .. string.rep(B[1], CARD_WIDTH) .. B[7] .. " "
   end
 
   if is_turn then
-    lines[start_line + 2] = lines[start_line + 2] .. turn_message
+    lines[start_line + 3] = lines[start_line + 3] .. turn_message
   end
 end
 
