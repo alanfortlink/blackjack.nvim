@@ -27,6 +27,14 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'alanfortlink/blackjack.nvim'
 ```
 
+### Setup
+
+```lua
+require("blackjack").setup({
+  card_style = "mini", -- Can be "mini" or "large"
+})
+```
+
 ## Usage
 
 To start a new game:

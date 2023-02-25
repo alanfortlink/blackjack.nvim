@@ -1,30 +1,49 @@
 local popup = require("plenary.popup")
 
-
 local utils = require("blackjack.utils")
 local match = require("blackjack.match")
 
-local M = {}
+local M = {
+  card_style = "mini",
+  -- large
+}
 
 local bjack_buf_id = nil -- Current buf id
 local bjack_win_id = nil -- Current win id
 
 -- Not really used but nice to have what I've settled for
 local DEALER_HEADER_HEIGHT = 1
-local DEALER_CARDS_HEIGHT = 7
 local PLAYER_HEADER_HEIGHT = 1
-local PLAYER_CARDS_HEIGHT = 7
 local ACTIONS_HEIGHT = 2
-local CARD_WIDTH = 5
+local get_card_width = function()
+  if M.card_style == "large" then
+    return 5
+  end
+
+  return 3
+end
+
 local MAX_CARDS = 10
 
-local WIDTH = (CARD_WIDTH * (MAX_CARDS + 1))
-local HEIGHT = DEALER_HEADER_HEIGHT
-    + DEALER_CARDS_HEIGHT
-    + PLAYER_HEADER_HEIGHT
-    + PLAYER_CARDS_HEIGHT
-    + ACTIONS_HEIGHT
-    + 3
+local get_width = function()
+  return math.max(50, (get_card_width() * (MAX_CARDS + 1)))
+end
+
+local get_card_height = function()
+  if M.card_style == "large" then
+    return 7
+  end
+
+  return 5
+end
+
+local get_height = function() return DEALER_HEADER_HEIGHT
+      + get_card_height()
+      + PLAYER_HEADER_HEIGHT
+      + get_card_height()
+      + ACTIONS_HEIGHT
+      + 3
+end
 
 local DEFAULT_BORDER_CHARS = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
 
@@ -42,10 +61,10 @@ M.open_game = function()
     bjack_win_id, _ = popup.create(bjack_buf_id, {
       title = "Black Jack (W: " .. match.scores.player_score .. " - L: " .. match.scores.dealer_score .. ")",
       highlight = "BlackJackWindow",
-      line = math.floor((vim.o.lines - HEIGHT) / 2),
-      col = math.floor((vim.o.columns - WIDTH) / 2),
-      minwidth = WIDTH,
-      minheight = HEIGHT,
+      line = math.floor((vim.o.lines - get_height()) / 2),
+      col = math.floor((vim.o.columns - get_width()) / 2),
+      minwidth = get_width(),
+      minheight = get_height(),
       borderchars = DEFAULT_BORDER_CHARS
     })
   end
@@ -57,7 +76,7 @@ M.open_game = function()
   M.render()
 end
 
-M.update_title = function ()
+M.update_title = function()
   if bjack_buf_id == nil then
     return
   end
@@ -84,7 +103,7 @@ local render_cards = function(lines, cards, is_turn, turn_message)
   local start_line = #lines + 1
 
   -- Create empty lines to fill with cards
-  for _ = 1, PLAYER_CARDS_HEIGHT do
+  for _ = 1, get_card_height() do
     lines[#lines + 1] = ""
   end
 
@@ -95,13 +114,21 @@ local render_cards = function(lines, cards, is_turn, turn_message)
     local extra = " "
     if symbol == '10' then extra = "" end
 
-    lines[start_line] = lines[start_line] .. B[5] .. string.rep(B[1], CARD_WIDTH) .. B[6] .. " "
-    lines[start_line + 1] = lines[start_line + 1] .. B[2] .. "   " .. extra .. symbol .. B[4] .. " "
-    lines[start_line + 2] = lines[start_line + 2] .. B[2] .. "     " .. B[4] .. " "
-    lines[start_line + 3] = lines[start_line + 3] .. B[2] .. "  " .. utils.get_suit(card) .. "  " .. B[4] .. " "
-    lines[start_line + 4] = lines[start_line + 4] .. B[2] .. "     " .. B[4] .. " "
-    lines[start_line + 5] = lines[start_line + 5] .. B[2] .. symbol .. extra .. "   " .. B[4] .. " "
-    lines[start_line + 6] = lines[start_line + 6] .. B[8] .. string.rep(B[1], CARD_WIDTH) .. B[7] .. " "
+    lines[start_line] = lines[start_line] .. B[5] .. string.rep(B[1], get_card_width()) .. B[6] .. " "
+
+    if M.card_style == "large" then
+      lines[start_line + 1] = lines[start_line + 1] .. B[2] .. "   " .. extra .. symbol .. B[4] .. " "
+      lines[start_line + 2] = lines[start_line + 2] .. B[2] .. "     " .. B[4] .. " "
+      lines[start_line + 3] = lines[start_line + 3] .. B[2] .. "  " .. utils.get_suit(card) .. "  " .. B[4] .. " "
+      lines[start_line + 4] = lines[start_line + 4] .. B[2] .. "     " .. B[4] .. " "
+      lines[start_line + 5] = lines[start_line + 5] .. B[2] .. symbol .. extra .. "   " .. B[4] .. " "
+      lines[start_line + 6] = lines[start_line + 6] .. B[8] .. string.rep(B[1], get_card_width()) .. B[7] .. " "
+    else
+      lines[start_line + 1] = lines[start_line + 1] .. B[2] .. " " .. extra .. symbol .. B[4] .. " "
+      lines[start_line + 2] = lines[start_line + 2] .. B[2] .. " " .. utils.get_suit(card) .. " " .. B[4] .. " "
+      lines[start_line + 3] = lines[start_line + 3] .. B[2] .. symbol .. extra .. " " .. B[4] .. " "
+      lines[start_line + 4] = lines[start_line + 4] .. B[8] .. string.rep(B[1], get_card_width()) .. B[7] .. " "
+    end
   end
 
   if is_turn then
@@ -123,17 +150,17 @@ M.render = function()
 
   lines[#lines + 1] = "Dealer Cards ( " .. dealer_total .. " )"
 
-  lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], WIDTH)
+  lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
 
   render_cards(lines, match.dealer_cards, is_dealer_turn, " Press <j> to reveal a new card")
 
-  lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], WIDTH)
+  lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
   lines[#lines + 1] = "Player Cards ( " .. player_total .. " )"
-  lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], WIDTH)
+  lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
 
   render_cards(lines, match.player_cards, is_player_turn, " Press <j> for a new card")
 
-  lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], WIDTH)
+  lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
   local option1 = nil
   local option2 = nil
   local status = nil
@@ -169,7 +196,7 @@ M.render = function()
     status = "Dealer Turn"
   end
 
-  local empty_space = WIDTH - string.len(option1) - string.len(option2)
+  local empty_space = get_width() - string.len(option1) - string.len(option2)
   empty_space = empty_space - 4
 
   local remaining_space = empty_space - string.len(status)
