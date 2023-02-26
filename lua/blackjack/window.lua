@@ -198,7 +198,6 @@ M.render = function()
 
   render_cards(lines, match.player_cards, is_player_turn, " Press <j> for a new card", " Press <k> to end your turn")
 
-  lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
   local option1 = nil
   local option2 = nil
   local status = nil
@@ -249,11 +248,10 @@ M.render = function()
   local cmd = option1 ..
       " " .. DEFAULT_BORDER_CHARS[2] .. empty .. status .. empty .. DEFAULT_BORDER_CHARS[2] .. " " .. option2
 
-  if option1 == "" and option2 == "" and status == "" then
-    cmd = ""
+  if option1 ~= "" or option2 ~= "" or status ~= "" then
+    lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
+    lines[#lines + 1] = cmd
   end
-
-  lines[#lines + 1] = cmd
 
   vim.api.nvim_buf_set_lines(bjack_buf_id, 0, -1, true, lines)
 
