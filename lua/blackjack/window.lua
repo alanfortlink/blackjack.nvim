@@ -243,7 +243,14 @@ M.render = function()
   end
 
   vim.api.nvim_buf_add_highlight(bjack_buf_id, 0, get_dealer_highlight(), 0, 15, 17)
-  vim.api.nvim_buf_add_highlight(bjack_buf_id, 0, get_player_highlight(), 10, 15, 17)
+
+  local player_line = 8
+
+  if M.card_style == "large" then
+    player_line = 10
+  end
+
+  vim.api.nvim_buf_add_highlight(bjack_buf_id, 0, get_player_highlight(), player_line, 15, 17)
 end
 
 return M
