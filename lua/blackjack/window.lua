@@ -59,7 +59,8 @@ M.open_game = function()
 
   if bjack_win_id == nil then
     bjack_win_id, _ = popup.create(bjack_buf_id, {
-      title = "Black Jack (W: " .. match.scores.player_score .. " - L: " .. match.scores.dealer_score .. ")   <q> to quit",
+      title = "Black Jack (W: " ..
+          match.scores.player_score .. " - L: " .. match.scores.dealer_score .. ")   <q> to quit",
       highlight = "BlackJackWindow",
       line = math.floor((vim.o.lines - get_height()) / 2),
       col = math.floor((vim.o.columns - get_width()) / 2),
@@ -165,6 +166,7 @@ M.render = function()
   local option2 = nil
   local status = nil
 
+  local highlight = "MoreMsg"
   if match.match_state == match.GAME_OVER then
     option1 = "(j) Play Again"
     option2 = "(k) Quit"
@@ -172,14 +174,19 @@ M.render = function()
     -- Set status
     if player_total > 21 then
       status = "YOU LOST!"
+      highlight = "ErrorMsg"
     elseif dealer_total > 21 then
       status = "YOU WON!"
+      highlight = "MoreMsg"
     elseif player_total == dealer_total then
       status = "DRAW!"
+      highlight = "WarningMsg"
     elseif player_total > dealer_total then
       status = "YOU WON!"
+      highlight = "MoreMsg"
     else
       status = "YOU LOST!"
+      highlight = "ErrorMsg"
     end
 
   end
@@ -202,11 +209,18 @@ M.render = function()
   local remaining_space = empty_space - string.len(status)
   local empty = string.rep(" ", remaining_space / 2)
 
-  local cmd = option1 .. " |" .. empty .. status .. empty .. "| " .. option2
+  local cmd = option1 ..
+      " " .. DEFAULT_BORDER_CHARS[2] .. empty .. status .. empty .. DEFAULT_BORDER_CHARS[2] .. " " .. option2
 
   lines[#lines + 1] = cmd
 
   vim.api.nvim_buf_set_lines(bjack_buf_id, 0, -1, true, lines)
+
+  if status ~= "" then
+    local col_start = string.len(option1) + 4
+    local col_end = col_start + string.len(status) + remaining_space
+    vim.api.nvim_buf_add_highlight(bjack_buf_id, 0, highlight, #lines - 1, col_start, col_end)
+  end
 end
 
 return M
