@@ -137,6 +137,26 @@ local render_cards = function(lines, cards, is_turn, turn_message)
   end
 end
 
+local get_highlight = function(score)
+  if score < 11 then
+    return "MoreMsg"
+  end
+
+  if score < 17 then
+    return "WarningMsg"
+  end
+
+  return "ErrorMsg"
+end
+
+local get_player_highlight = function()
+  return get_highlight(match.get_player_total())
+end
+
+local get_dealer_highlight = function ()
+  return get_highlight(match.get_dealer_total())
+end
+
 M.render = function()
   if bjack_buf_id == nil then
     return
@@ -221,6 +241,9 @@ M.render = function()
     local col_end = col_start + string.len(status) + remaining_space
     vim.api.nvim_buf_add_highlight(bjack_buf_id, 0, highlight, #lines - 1, col_start, col_end)
   end
+
+  vim.api.nvim_buf_add_highlight(bjack_buf_id, 0, get_dealer_highlight(), 0, 15, 17)
+  vim.api.nvim_buf_add_highlight(bjack_buf_id, 0, get_player_highlight(), 10, 15, 17)
 end
 
 return M
