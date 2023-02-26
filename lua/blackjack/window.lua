@@ -187,13 +187,13 @@ M.render = function()
   if match.match_state == match.PLAYER_PICKING_CARD then
     option1 = "(j) Ask for card"
     option2 = "(k) End Turn"
-    status = "Your Turn"
+    status = ""
   end
 
   if match.match_state == match.DEALER_PICKING_CARD then
     option1 = "(j) Reveal card"
     option2 = "(k) Quit"
-    status = "Dealer Turn"
+    status = ""
   end
 
   local empty_space = get_width() - string.len(option1) - string.len(option2)
