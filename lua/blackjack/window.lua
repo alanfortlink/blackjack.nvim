@@ -190,13 +190,13 @@ M.render = function()
 
   lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
 
-  render_cards(lines, match.dealer_cards, is_dealer_turn, " Press <j> to reveal a new card", "")
+  render_cards(lines, match.dealer_cards, is_dealer_turn, " <j> to reveal a new card", "")
 
   lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
   lines[#lines + 1] = "Player Cards ( " .. player_total .. " )"
   lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
 
-  render_cards(lines, match.player_cards, is_player_turn, " Press <j> for a new card", " Press <k> to end your turn")
+  render_cards(lines, match.player_cards, is_player_turn, " <j> for a new card", " <k> to end your turn")
 
   local option1 = nil
   local option2 = nil
@@ -204,8 +204,8 @@ M.render = function()
 
   local highlight = "MoreMsg"
   if match.match_state == match.GAME_OVER then
-    option1 = "(j) Play Again"
-    option2 = "(k) Quit"
+    option1 = "<j> Play Again"
+    option2 = "<k> Quit"
 
     -- Set status
     if player_total > 21 then
