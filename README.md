@@ -46,6 +46,7 @@ Plug 'alanfortlink/blackjack.nvim'
 ```lua
 require("blackjack").setup({
   card_style = "mini", -- Can be "mini" or "large"
+  suit_style = "black", -- Can be "black" or "white"
 })
 ```
 

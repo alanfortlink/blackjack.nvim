@@ -115,20 +115,37 @@ local render_cards = function(lines, cards, is_turn, turn_message)
     local extra = " "
     if symbol == '10' then extra = "" end
 
-    lines[start_line] = lines[start_line] .. B[5] .. string.rep(B[1], get_card_width()) .. B[6] .. " "
+    lines[start_line] = lines[start_line] .. string.format("%s%s%s ", B[5], string.rep(B[1], get_card_width()), B[6])
+
 
     if M.card_style == "large" then
-      lines[start_line + 1] = lines[start_line + 1] .. B[2] .. "   " .. extra .. symbol .. B[4] .. " "
-      lines[start_line + 2] = lines[start_line + 2] .. B[2] .. "     " .. B[4] .. " "
-      lines[start_line + 3] = lines[start_line + 3] .. B[2] .. "  " .. utils.get_suit(card) .. "  " .. B[4] .. " "
-      lines[start_line + 4] = lines[start_line + 4] .. B[2] .. "     " .. B[4] .. " "
-      lines[start_line + 5] = lines[start_line + 5] .. B[2] .. symbol .. extra .. "   " .. B[4] .. " "
-      lines[start_line + 6] = lines[start_line + 6] .. B[8] .. string.rep(B[1], get_card_width()) .. B[7] .. " "
+      -- ╭─────╮ start_line
+      -- │    4│ start_line+1
+      -- │     │ start_line+2
+      -- │  ♤  │ start_line+3
+      -- │     │ start_line+4
+      -- │4    │ start_line+5
+      -- ╰─────╯ start_line+6
+
+      lines[start_line + 1] = lines[start_line + 1] .. string.format("%s   %s%s%s ", B[2], extra, symbol, B[4])
+      lines[start_line + 2] = lines[start_line + 2] .. string.format("%s     %s ", B[2], B[4])
+      lines[start_line + 3] = lines[start_line + 3] .. string.format("%s  %s  %s ", B[2], utils.get_suit(card), B[4])
+      lines[start_line + 4] = lines[start_line + 4] .. string.format("%s     %s ", B[2], B[4])
+      lines[start_line + 5] = lines[start_line + 5] .. string.format("%s%s%s   %s ", B[2], symbol, extra, B[4])
+      lines[start_line + 6] = lines[start_line + 6] ..
+          string.format("%s%s%s ", B[8], string.rep(B[1], get_card_width()), B[7])
     else
-      lines[start_line + 1] = lines[start_line + 1] .. B[2] .. " " .. extra .. symbol .. B[4] .. " "
-      lines[start_line + 2] = lines[start_line + 2] .. B[2] .. " " .. utils.get_suit(card) .. " " .. B[4] .. " "
-      lines[start_line + 3] = lines[start_line + 3] .. B[2] .. symbol .. extra .. " " .. B[4] .. " "
-      lines[start_line + 4] = lines[start_line + 4] .. B[8] .. string.rep(B[1], get_card_width()) .. B[7] .. " "
+      -- ╭───╮ start_line
+      -- │  A│ start_line+1
+      -- │ ♤ │ start_line+2
+      -- │A  │ start_line+3
+      -- ╰───╯ start_line+4
+
+      lines[start_line + 1] = lines[start_line + 1] .. string.format("%s %s%s%s ", B[2], extra, symbol, B[4])
+      lines[start_line + 2] = lines[start_line + 2] .. string.format("%s %s %s ", B[2], utils.get_suit(card), B[4])
+      lines[start_line + 3] = lines[start_line + 3] .. string.format("%s%s%s %s ", B[2], symbol, extra, B[4])
+      lines[start_line + 4] = lines[start_line + 4] ..
+          string.format("%s%s%s ", B[8], string.rep(B[1], get_card_width()), B[7])
     end
   end
 
@@ -153,7 +170,7 @@ local get_player_highlight = function()
   return get_highlight(match.get_player_total())
 end
 
-local get_dealer_highlight = function ()
+local get_dealer_highlight = function()
   return get_highlight(match.get_dealer_total())
 end
 

@@ -2,6 +2,9 @@ local match = require("blackjack.match")
 
 local M = {}
 
+M.suit_style = "black"
+-- "white"
+
 M.get_suit = function(card)
   local suit_map = {
     [match.CLUBS] = '♣',
@@ -9,6 +12,15 @@ M.get_suit = function(card)
     [match.DIAMONDS] = '♦',
     [match.SPADES] = '♠',
   }
+
+  if M.suit_style == "white" then
+    suit_map = {
+      [match.CLUBS] = '♧',
+      [match.HEARTS] = '♡',
+      [match.DIAMONDS] = '♢',
+      [match.SPADES] = '♤',
+    }
+  end
 
   if not card.revealed then
     return '?'
