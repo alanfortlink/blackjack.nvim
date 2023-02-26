@@ -99,7 +99,7 @@ M.destroy = function()
 
 end
 
-local render_cards = function(lines, cards, is_turn, turn_message)
+local render_cards = function(lines, cards, is_turn, option1_message, option2_message)
   local B = DEFAULT_BORDER_CHARS
   local start_line = #lines + 1
 
@@ -116,7 +116,6 @@ local render_cards = function(lines, cards, is_turn, turn_message)
     if symbol == '10' then extra = "" end
 
     lines[start_line] = lines[start_line] .. string.format("%s%s%s ", B[5], string.rep(B[1], get_card_width()), B[6])
-
 
     if M.card_style == "large" then
       -- ╭─────╮ start_line
@@ -150,7 +149,8 @@ local render_cards = function(lines, cards, is_turn, turn_message)
   end
 
   if is_turn then
-    lines[start_line + 3] = lines[start_line + 3] .. turn_message
+    lines[start_line + 2] = lines[start_line + 2] .. option1_message
+    lines[start_line + 3] = lines[start_line + 3] .. option2_message
   end
 end
 
@@ -190,13 +190,13 @@ M.render = function()
 
   lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
 
-  render_cards(lines, match.dealer_cards, is_dealer_turn, " Press <j> to reveal a new card")
+  render_cards(lines, match.dealer_cards, is_dealer_turn, " Press <j> to reveal a new card", "")
 
   lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
   lines[#lines + 1] = "Player Cards ( " .. player_total .. " )"
   lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
 
-  render_cards(lines, match.player_cards, is_player_turn, " Press <j> for a new card")
+  render_cards(lines, match.player_cards, is_player_turn, " Press <j> for a new card", " Press <k> to end your turn")
 
   lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
   local option1 = nil
@@ -229,14 +229,14 @@ M.render = function()
   end
 
   if match.match_state == match.PLAYER_PICKING_CARD then
-    option1 = "(j) Ask for card"
-    option2 = "(k) End Turn"
+    option1 = ""
+    option2 = ""
     status = ""
   end
 
   if match.match_state == match.DEALER_PICKING_CARD then
-    option1 = "(j) Reveal card"
-    option2 = "(k) Quit"
+    option1 = ""
+    option2 = ""
     status = ""
   end
 
@@ -248,6 +248,10 @@ M.render = function()
 
   local cmd = option1 ..
       " " .. DEFAULT_BORDER_CHARS[2] .. empty .. status .. empty .. DEFAULT_BORDER_CHARS[2] .. " " .. option2
+
+  if option1 == "" and option2 == "" and status == "" then
+    cmd = ""
+  end
 
   lines[#lines + 1] = cmd
 
