@@ -190,7 +190,7 @@ M.render = function()
 
   lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
 
-  render_cards(lines, match.dealer_cards, is_dealer_turn, " <j> to reveal a new card", "")
+  render_cards(lines, match.dealer_cards, is_dealer_turn, " Dealer playing...", "")
 
   lines[#lines + 1] = string.rep(DEFAULT_BORDER_CHARS[1], get_width())
   lines[#lines + 1] = "Player Cards ( " .. player_total .. " )"

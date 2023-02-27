@@ -2,6 +2,9 @@ local match = require("blackjack.match")
 local window = require("blackjack.window")
 
 local M = {}
+local autoplay_delay = 1500 -- 2 seconds between cards
+
+local autoplay = nil
 
 local new_game = function()
   match.start_new_match()
@@ -19,20 +22,35 @@ local player_next_card = function()
   match.player_picks_card()
 end
 
-local player_end_turn = function()
-  match.match_state = match.DEALER_PICKING_CARD
-end
-
 local dealer_next_card = function()
   if match.match_state ~= match.DEALER_PICKING_CARD then
     return
   end
 
-  match.dealer_picks_card()
+  match.dealer_picks_card() -- updates the match_state if game is over
+
+  if match.match_state ~= match.GAME_OVER then
+    autoplay()
+  end
+end
+
+local player_end_turn = function()
+  if match.match_state ~= match.PLAYER_PICKING_CARD then
+    return
+  end
+  match.match_state = match.DEALER_PICKING_CARD
+  autoplay()
 end
 
 local dealer_end_turn = function()
   end_game()
+end
+
+autoplay = function()
+  vim.defer_fn(function()
+    dealer_next_card()
+    window.render()
+  end, autoplay_delay)
 end
 
 local option1 = function()
