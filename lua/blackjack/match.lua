@@ -1,8 +1,18 @@
 local path = require("plenary.path")
 local data_path = vim.fn.stdpath("data")
-local scores_path = string.format("%s/scores.json", data_path);
+local default_scores_path = string.format("%s/blackjackscores.json", data_path);
 
 local M = {}
+
+M.scores_path = nil
+
+local get_scores_path = function()
+  if M.scores_path == nil then
+    return default_scores_path
+  end
+
+  return M.scores_path
+end
 
 -- To keep track of who's winning
 M.scores = {
@@ -53,11 +63,11 @@ local deal_initial_hands = function()
 end
 
 local save_scores = function()
-  path:new(scores_path):write(vim.fn.json_encode(M.scores), "w")
+  path:new(get_scores_path()):write(vim.fn.json_encode(M.scores), "w")
 end
 
 local read_scores_ = function()
-  return vim.json.decode(path:new(scores_path):read())
+  return vim.json.decode(path:new(get_scores_path()):read())
 end
 
 local read_scores = function()
@@ -93,6 +103,7 @@ local update_scores = function()
 end
 
 local shuffle_deck = function()
+  math.randomseed(os.clock())
   for i = 1, 52 do
     local temp = M.deck[i]
     local j = math.random(52)
