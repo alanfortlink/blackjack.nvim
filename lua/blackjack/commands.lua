@@ -56,9 +56,7 @@ end
 local option1 = function()
   if match.match_state == match.PLAYER_PICKING_CARD then
     player_next_card()
-  elseif match.match_state == match.DEALER_PICKING_CARD then
-    -- dealer_next_card()
-  else -- GAME_OVER
+  elseif match.match_state == match.GAME_OVER then
     new_game()
   end
 
@@ -68,9 +66,7 @@ end
 local option2 = function()
   if match.match_state == match.PLAYER_PICKING_CARD then
     player_end_turn()
-  elseif match.match_state == match.DEALER_PICKING_CARD then
-    -- dealer_end_turn()
-  else -- GAME_OVER
+  elseif match.match_state == match.GAME_OVER then
     end_game()
   end
 
@@ -93,7 +89,6 @@ M.create_commands = function()
   vim.api.nvim_create_user_command("BlackJackPlayerEndTurn", player_end_turn, {})
 
   -- Dealer Gameplay
-  -- vim.api.nvim_create_user_command("BlackJackDealerNextCard", dealer_next_card, {})
   vim.api.nvim_create_user_command("BlackJackDealerEndGame", dealer_end_turn, {})
 
   -- Options
@@ -102,5 +97,4 @@ M.create_commands = function()
 
   vim.api.nvim_create_user_command("BlackJackResetScores", reset_scores, {})
 end
-
 return M

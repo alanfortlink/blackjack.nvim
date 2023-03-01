@@ -198,9 +198,9 @@ M.render = function()
 
   render_cards(lines, match.player_cards, is_player_turn, " <j> for a new card", " <k> to end your turn")
 
-  local option1 = nil
-  local option2 = nil
-  local status = nil
+  local option1 = ""
+  local option2 = ""
+  local status = ""
 
   local highlight = "MoreMsg"
   if match.match_state == match.GAME_OVER then
@@ -225,18 +225,6 @@ M.render = function()
       highlight = "ErrorMsg"
     end
 
-  end
-
-  if match.match_state == match.PLAYER_PICKING_CARD then
-    option1 = ""
-    option2 = ""
-    status = ""
-  end
-
-  if match.match_state == match.DEALER_PICKING_CARD then
-    option1 = ""
-    option2 = ""
-    status = ""
   end
 
   local empty_space = get_width() - string.len(option1) - string.len(option2)
