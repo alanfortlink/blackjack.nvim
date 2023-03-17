@@ -18,6 +18,7 @@ end
 M.scores = {
   player_score = 0,
   dealer_score = 0,
+  draw_score = 0,
 }
 
 M.deck = {} -- Cards in the deck
@@ -78,6 +79,10 @@ local read_scores = function()
   end
 
   M.scores = scores
+
+  if M.scores.draw_score == nil then
+    M.scores.draw_score = 0
+  end
 end
 
 local update_scores = function()
@@ -97,6 +102,8 @@ local update_scores = function()
     M.scores.player_score = M.scores.player_score + 1
   elseif player_total < dealer_total then
     M.scores.dealer_score = M.scores.dealer_score + 1
+  elseif player_total == dealer_total then
+    M.scores.draw_score = M.scores.draw_score + 1
   end
 
   save_scores()
@@ -115,6 +122,7 @@ end
 M.reset_scores = function()
   M.scores.dealer_score = 0
   M.scores.player_score = 0
+  M.scores.draw_score = 0
 
   save_scores()
 end
