@@ -37,7 +37,8 @@ local get_card_height = function()
   return 5
 end
 
-local get_height = function() return DEALER_HEADER_HEIGHT
+local get_height = function()
+  return DEALER_HEADER_HEIGHT
       + get_card_height()
       + PLAYER_HEADER_HEIGHT
       + get_card_height()
@@ -55,12 +56,14 @@ M.open_game = function()
   -- Create a new buffer if we don't have one
   if bjack_buf_id == nil then
     bjack_buf_id = vim.api.nvim_create_buf(false, false)
+    vim.api.nvim_buf_set_option(bjack_buf_id, "modifiable", false)
   end
 
   if bjack_win_id == nil then
     bjack_win_id, _ = popup.create(bjack_buf_id, {
       title = "Black Jack (W: " ..
-          match.scores.player_score .. " - L: " .. match.scores.dealer_score .. " - D: " .. match.scores.draw_score .. ")   <q> to quit",
+          match.scores.player_score ..
+          " - L: " .. match.scores.dealer_score .. " - D: " .. match.scores.draw_score .. ")   <q> to quit",
       highlight = "BlackJackWindow",
       line = math.floor((vim.o.lines - get_height()) / 2),
       col = math.floor((vim.o.columns - get_width()) / 2),
@@ -88,15 +91,14 @@ end
 
 M.destroy = function()
   if bjack_win_id ~= nil then
-    vim.api.nvim_win_close(bjack_win_id, true)
+    pcall(function() vim.api.nvim_win_close(bjack_win_id, true) end)
     bjack_win_id = nil
   end
 
   if bjack_buf_id ~= nil then
-    vim.api.nvim_buf_delete(bjack_buf_id, { force = true })
+    pcall(function() vim.api.nvim_buf_delete(bjack_buf_id, { force = true }) end)
     bjack_buf_id = nil
   end
-
 end
 
 local render_cards = function(lines, cards, is_turn, option1_message, option2_message)
@@ -224,7 +226,6 @@ M.render = function()
       status = "YOU LOST!"
       highlight = "ErrorMsg"
     end
-
   end
 
   local empty_space = get_width() - string.len(option1) - string.len(option2)
@@ -241,7 +242,9 @@ M.render = function()
     lines[#lines + 1] = cmd
   end
 
+  vim.api.nvim_buf_set_option(bjack_buf_id, "modifiable", true)
   vim.api.nvim_buf_set_lines(bjack_buf_id, 0, -1, true, lines)
+  vim.api.nvim_buf_set_option(bjack_buf_id, "modifiable", false)
 
   if status ~= "" then
     local col_start = string.len(option1) + 4
