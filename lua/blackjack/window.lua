@@ -73,9 +73,9 @@ M.open_game = function()
     })
   end
 
-  vim.api.nvim_buf_set_keymap(bjack_buf_id, "n", "j", ":BlackJackOption1<CR>", { silent = true })
-  vim.api.nvim_buf_set_keymap(bjack_buf_id, "n", "k", ":BlackJackOption2<CR>", { silent = true })
-  vim.api.nvim_buf_set_keymap(bjack_buf_id, "n", "q", ":BlackJackQuit<CR>", { silent = true })
+  vim.api.nvim_buf_set_keymap(bjack_buf_id, "n", utils.keybindings["next"], ":BlackJackOption1<CR>", { silent = true })
+  vim.api.nvim_buf_set_keymap(bjack_buf_id, "n", utils.keybindings["finish"], ":BlackJackOption2<CR>", { silent = true })
+  vim.api.nvim_buf_set_keymap(bjack_buf_id, "n", utils.keybindings["quit"], ":BlackJackQuit<CR>", { silent = true })
 
   M.render()
 end

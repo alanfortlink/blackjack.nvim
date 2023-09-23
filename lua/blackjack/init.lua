@@ -18,6 +18,10 @@ M.setup = function(opts)
   if opts.suit_style ~= nil then
     utils.suit_style = opts.suit_style
   end
+
+  if opts.keybindings ~= nil then
+    utils.apply_keybindings(opts.keybindings)
+  end
 end
 
 return M
