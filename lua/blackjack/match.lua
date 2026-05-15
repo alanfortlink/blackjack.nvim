@@ -56,10 +56,13 @@ local deal_initial_hands = function()
   -- Dealer's first card is revealed
   M.dealer_cards[#M.dealer_cards + 1] = pick_card(true)
 
+  -- Player's first card is revealed
+  M.player_cards[#M.player_cards + 1] = pick_card(true)
+
   -- Dealer's second card is NOT revealed yet
   M.dealer_cards[#M.dealer_cards + 1] = pick_card(false)
 
-  -- Player's first card is revealed
+  -- Player's second card is revealed
   M.player_cards[#M.player_cards + 1] = pick_card(true)
 end
 
